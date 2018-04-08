@@ -3,7 +3,7 @@
 ![Assembled board](https://github.com/wez/SpockKeyboard/blob/master/images/assembled.jpg)
 
 This repo holds schematics and code for the Spock keyboard that was
-designed by Wez Furlong and modeled on his hands.
+designed by me (Wez Furlong) and modeled on my hands.
 
 The keyboard is a split ergonomic layout in an ortholinear (straight columns,
 aligned to your fingers rather than staggered) arrangement with splayed columns
@@ -25,8 +25,8 @@ BLE and so on).
 
 The hardware directory holds the kicad pcb defintion, gerber files and plate
 definitions suitable for building a sandwich style case.  The PCB and gerber
-files meet the DRC requirements for Seeed's PCB fabrication service.  The case
-design files are suitable for use with Ponoko's service.
+files meet the DRC requirements for [Seeed's PCB fabrication service](https://www.seeedstudio.com/fusion_pcb.html).
+The case design files are suitable for use with [Ponoko's service](http://www.ponoko.com).
 
 The Spockduino directory holds some basic code for a keyboard firmware that uses
 the Adafruit Feather M0 Express controller, and a SparkFun SX1509 breakout to
@@ -57,8 +57,8 @@ Should you decide to build one of these for yourself, you will need:
   take care to avoid shorting the contacts under the PCB.
 * 2x 2x12 header block.  Pick this to match your wiring.  I used right angled
   male header block to save on vertical space.
-* Microcontroller of your choice.  I'm using an [Adafruit Feather M0 Express with](https://www.adafruit.com/product/3403)
-  the Spockduino code.  You should be able to use other Feather boards without
+* Microcontroller of your choice.  I'm using an [Adafruit Feather M0 Express](https://www.adafruit.com/product/3403)
+  with the Spockduino code.  You should be able to use other Feather boards without
   changing the wiring.
 * 1x [SX1509 IO Expander](https://www.sparkfun.com/products/13601)
 * Misc jumper wires
@@ -115,23 +115,25 @@ The Spockduino code assumes that you connected the pins like this:
 
 ### Feather
 
-The Feather is attached to the left hand.
+The Feather is attached to the left hand.  Take care: the header block
+labels on the backside are wrong; see the errata below!
 
-* Pins labelled A0-A5 on the left side are connected to r0-r5 in the header block
-* Pins labelled 5-12 on the right side are connected to c0-c6 in the header block
-* 3V3, GND, SDA, SDL are connected to the pins with the same names
+* Pins labelled `A0`-`A5` on the left side are connected to `r0`-`r5` in the header block
+* Pins labelled `5`-`12` on the right side are connected to `c0`-`c6` in the header block
+* `3V3`, `GND`, `SDA`, `SDL` are connected to the pins with the same names
   on the IO expander.  These 4 lines are intended to be carried over
-  the connecting cable between the halves so you may want to connec the
+  the connecting cable between the halves so you may want to connect the
   feather to a TRRS or RJ45 block and do the same on the other half
   for the Expander
 
 ### SX 1509
 
-The SX1509 is attached to the right hand.
+The SX1509 is attached to the right hand. Take care: the header block
+labels on the backside are wrong; see the errata below!
 
-* Pins 0-5 are connected to r0-r5 in the header block.
-* Pins 8-14 are connected to c0-c6 in the header block.
-* 3V3, GND, SDA, SDL are connected to the pins with the same names
+* Pins `0`-`5` are connected to `r0`-`r5` in the header block.
+* Pins `8`-`14` are connected to `c0`-`c6` in the header block.
+* `3V3`, `GND`, `SDA`, `SDL` are connected to the pins with the same names
   on the Feather as noted above.
 
 ### Flashing
