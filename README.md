@@ -1,5 +1,7 @@
 # "Spock" Keyboard
 
+![Assembled board](https://github.com/wez/SpockKeyboard/blob/master/images/assembled.jpg)
+
 This repo holds schematics and code for the Spock keyboard that was
 designed by Wez Furlong and modeled on his hands.
 
@@ -89,10 +91,10 @@ can fit everything together.
 
 1. Solder the diodes first.  The black bar of the diode must be aligned to the thicker
    white bar.  For the left hand the diodes go in on the side with the `dkXX` labels,
-   for the right hand they go on the opposite side.
+   for the right hand they go on the opposite side. ![diodes](https://github.com/wez/SpockKeyboard/blob/master/images/diodes.jpg)
 2. Solder the header block second.  If you are using a plate the header pins must be
    on the other side of the board from the diodes.  If you are rocking a plateless
-   build then you may want the header pins on the top side.
+   build then you may want the header pins on the top side. ![header](https://github.com/wez/SpockKeyboard/blob/master/images/header.jpg)
 3. If using a plate, insert the M3 nuts and spacers now.  The nuts go on the same side
    as the diodes, with the spacers on the other side.
 4. Place the plate; it goes on the same side as the diodes and should click in
