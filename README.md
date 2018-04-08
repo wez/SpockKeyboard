@@ -51,19 +51,19 @@ Should you decide to build one of these for yourself, you will need:
   that meets your taste and internal electroncs selection.
 * 20 x M3 nuts
 * 20 x M3 screws
-* Top and bottom plate.  See hardware/spock-case-ponoko-p2.svg for left+right and top+bottom.
+* Top and bottom plate.  See [hardware/spock-case-ponoko-p2.svg](https://github.com/wez/SpockKeyboard/blob/master/hardware/spock-case-ponoko-p2.svg) for left+right and top+bottom.
   I recommend using matte acrylic for its appealing combination of weight, appearance and price.
   Note that you don't strictly need the plates if you want to rock a bare PCB, but you should
   take care to avoid shorting the contacts under the PCB.
 * 2x 2x12 header block.  Pick this to match your wiring.  I used right angled
   male header block to save on vertical space.
-* Microcontroller of your choice.  I'm using an Adafruit Feather M0 Express with
+* Microcontroller of your choice.  I'm using an [Adafruit Feather M0 Express with](https://www.adafruit.com/product/3403)
   the Spockduino code.  You should be able to use other Feather boards without
   changing the wiring.
-* 1x SX1509 IO Expander
+* 1x [SX1509 IO Expander](https://www.sparkfun.com/products/13601)
 * Misc jumper wires
-* 2x Jack and 1x connecting cable with 4+ wires.  Some folks like TRRS audio cables and
-  jacks, and others like RJ45 jacks and cables.
+* 2x Jack and 1x connecting cable with 4+ wires.  Some folks like [TRRS](https://www.sparkfun.com/products/11570) audio cables and
+  jacks, and others like [RJ45 jacks](https://www.sparkfun.com/products/643) ([+breakout](https://www.sparkfun.com/products/716)) and cables.
 
 note: you can trade two of the 1.25u key caps in the thumb clusters for 1u to make
 room to trade two of the other 1.25u caps with 1.5u caps for a total of 72x 1u caps,
