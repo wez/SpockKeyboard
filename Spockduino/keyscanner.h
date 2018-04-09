@@ -23,7 +23,7 @@ static const int expRowPins[] = {0,1,2,3,4,5};
 
 static struct matrix_t debounceMatrix;
 static struct matrix_t localMatrix;
-static constexpr int kDebounceIterations = 10;
+static constexpr int kDebounceIterations = 1;
 static int debouncing = kDebounceIterations;
 static SX1509 expander;
 

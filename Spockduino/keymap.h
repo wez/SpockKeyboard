@@ -19,6 +19,7 @@ static constexpr uint32_t kToggleMod = 0x500;
 static constexpr uint32_t kKeyAndMod = 0x600;
 static constexpr uint32_t kMouseButton = 0x700;
 static constexpr uint32_t kMacro = 0x800;
+static constexpr uint32_t kTapInterval = 100; // milliseconds
 typedef uint32_t action_t;
 
 #define PASTE(a, b) a ## b
@@ -63,6 +64,7 @@ struct keystate {
   uint8_t scanCode;
   bool down;
   uint32_t lastChange;
+  uint32_t priorChange;
   action_t action;
 };
 // We allow tracking the state of up to 16 keys.
@@ -79,12 +81,17 @@ struct matrix_t {
 };
 struct matrix_t lastRead = {0,0,0,0,0,0};
 
+// true if we synthesized a key tap on the last run; we will need
+// to ensure that we follow up with a release event on the next loop
+static bool last_was_tap = false;
+
 struct matrix_t readMatrix();
 void initKeyScanner();
 
 void resetKeyMatrix() {
   layer_pos = 0;
   layer_stack[0] = 0;
+  last_was_tap = false;
   memset(&lastRead, 0, sizeof(lastRead));
   memset(keyStates, 0xff, sizeof(keyStates));
   initKeyScanner();
@@ -224,6 +231,7 @@ void applyMatrix() {
         if (state->scanCode == scanCode) {
           // Update the transition time, if any
           if (state->down != isDown) {
+            state->priorChange = state->lastChange;
             state->lastChange = now;
             state->down = isDown;
             if (isDown) {
@@ -236,6 +244,7 @@ void applyMatrix() {
           // time to the current time.
           state->down = isDown;
           state->scanCode = scanCode;
+          state->priorChange = now;
           state->lastChange = now;
           if (isDown) {
             state->action = resolveActionForScanCodeOnActiveLayer(scanCode);
@@ -260,28 +269,21 @@ void applyMatrix() {
     }
   }
 
-  if (keysChanged) {
+  if (keysChanged || last_was_tap) {
     KeyReport report;
     memset(&report, 0, sizeof(report));
     uint8_t repsize = 0;
     uint8_t mods = 0;
     uint8_t mouseButtons = 0;
+    last_was_tap = false;
 
     for (auto &state: keyStates) {
       if (state.scanCode != 0xff && state.down) {
         switch (state.action & kMask) {
           case kTapHold:
-            if (now - state.lastChange > 200) {
+            if (now - state.lastChange > kTapInterval) {
               // Holding
               mods |= (state.action >> 16) & 0xff;
-#if 0
-            } else {
-              // Tapping
-              auto key = state.action & 0xff;
-              if (key != 0 && repsize < 6) {
-                report.keys[repsize++] = key;
-              }
-#endif
             }
             break;
           case kKeyAndMod:
@@ -315,11 +317,12 @@ void applyMatrix() {
       } else if (state.scanCode != 0xff && !state.down) {
         switch (state.action & kMask) {
           case kTapHold:
-            if (now - state.lastChange  <= 10) {
-              // Tapped
+            if (state.lastChange == now && state.lastChange - state.priorChange <= kTapInterval) {
+              // Tapped and just released
               auto key = state.action & 0xff;
               if (key != 0 && repsize < 6) {
                 report.keys[repsize++] = key;
+                last_was_tap = true;
               }
             }
             break;
@@ -329,7 +332,7 @@ void applyMatrix() {
 
     // HID().mouseButtonPress(mouseButtons);
 
-#if 0
+#if WAT
     Serial.print("mods=");
     Serial.print(mods, HEX);
     Serial.print(" repsize=");

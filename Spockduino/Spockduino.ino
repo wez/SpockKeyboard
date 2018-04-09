@@ -1,3 +1,4 @@
+#define WAT 0
 #include "HID.h"
 #include "HIDTables.h"
 #include "Keyboard.h"
@@ -61,13 +62,13 @@
 
 void setup() 
 {
-//  Serial.begin(115200);
+#if WAT
+  Serial.begin(115200);
+#endif
   Keyboard.begin();
 
   initKeyScanner();
   resetKeyMatrix();
-
- // Serial.println("made it here");
 }
 
 void loop() 
