@@ -2,7 +2,6 @@
 #include "HID.h"
 #include "HIDTables.h"
 #include "Keyboard.h"
-#include "SparkFunSX1509.h"
 
 #define HID_KEYBOARD_A HID_KEYBOARD_A_AND_A
 #define HID_KEYBOARD_B HID_KEYBOARD_B_AND_B

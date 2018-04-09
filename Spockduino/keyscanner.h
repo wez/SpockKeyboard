@@ -1,4 +1,6 @@
 #pragma once
+#include "sx1509.h"
+
 // This file holds the code that scans the keyboard matrix.
 // It uses an SX1509 IO expander to read the matrix for the
 // right hand side and an Adafruit Feather M0 for the left
@@ -28,43 +30,56 @@ static int debouncing = kDebounceIterations;
 static SX1509 expander;
 
 void initKeyScanner() {
-  expander.begin();
+  expander.init();
   memset(&debounceMatrix, 0, sizeof(debounceMatrix));
   memset(&localMatrix, 0, sizeof(localMatrix));
   debouncing = kDebounceIterations;
 
+  // Set all the rows to output-high
   for (const auto &pin : rowPins) {
     pinMode(pin, OUTPUT);
     digitalWrite(pin, HIGH);
   }
-  for (const auto &pin : expRowPins) {
-    expander.pinMode(pin, OUTPUT);
-    expander.digitalWrite(pin, HIGH);
-  }
 
+  // 0 is output
+  expander.directionA(0b11000000);
+  // 1 is high
+  expander.dataA(0b00111111);
+
+  // Set all the columns to input-pullup
   for (const auto &pin : colPins) {
     pinMode(pin, INPUT_PULLUP);
   }
-  for (const auto &pin : expColPins) {
-    expander.pinMode(pin, INPUT_PULLUP);
-  }
+
+  // 1 is input
+  expander.directionB(0b01111111);
+  // 1 is pull up enabled
+  expander.pullupB(0b01111111);
 }
 
 void scanMatrix() {
   for (int rowNum = 0; rowNum < sizeof(rowPins) / sizeof(rowPins[0]);
        ++rowNum) {
+    // Set just this row to LOW in the expander; the rest are set HIGH
+    expander.dataA(~(1<<rowNum));
     digitalWrite(rowPins[rowNum], LOW);
-    expander.digitalWrite(expRowPins[rowNum], LOW);
     delayMicroseconds(25);
 
     uint16_t rowBits = 0;
+    uint8_t expanderBits;
+
+    // Read all the columns from the expander in a single IO op
+    if (!expander.readDataB(expanderBits)) {
+      // Pretend that they are all high if there is a comms error
+      expanderBits = 0xff;
+    }
 
     for (int colNum = 0; colNum < sizeof(colPins) / sizeof(colPins[0]);
          ++colNum) {
       if (!digitalRead(colPins[colNum])) {
         rowBits |= 1 << (colNum);
       }
-      if (!expander.digitalRead(expColPins[colNum])) {
+      if ((expanderBits & (1<<colNum)) == 0) {
         rowBits |= 1 << (colNum + 7);
       }
     }
@@ -76,7 +91,6 @@ void scanMatrix() {
     }
 
     digitalWrite(rowPins[rowNum], HIGH);
-    expander.digitalWrite(expRowPins[rowNum], HIGH);
   }
 
   if (debouncing) {
