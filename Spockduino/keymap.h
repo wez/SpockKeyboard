@@ -19,12 +19,13 @@ static constexpr uint32_t kToggleMod = 0x500;
 static constexpr uint32_t kKeyAndMod = 0x600;
 static constexpr uint32_t kMouseButton = 0x700;
 static constexpr uint32_t kMacro = 0x800;
-static constexpr uint32_t kTapInterval = 100; // milliseconds
+static constexpr uint32_t kTapInterval = 250; // milliseconds
 typedef uint32_t action_t;
 
 #define PASTE(a, b) a ## b
 
 #define ___      0
+#define CONS(a)  0  // FIXME
 #define KEY(a)   kKeyPress | PASTE(HID_KEYBOARD_, a)
 #define MOD(a)   kModifier | PASTE(KEYBOARD_MODIFIER_, a)
 #define TMOD(a)  kToggleMod | PASTE(KEYBOARD_MODIFIER_, a)
@@ -142,7 +143,7 @@ const action_t keymap[2][84] = {
   // Layer 0
   KEYMAP(
     // LEFT
-    KEY(ESCAPE),            ___,            ___,                        ___,           KEY(MINUS_AND_UNDERSCORE), KEY(EQUALS_AND_PLUS),
+    KEY(ESCAPE),            KEY(PAUSE),     KEY(SCROLL_LOCK),           ___,           KEY(MINUS_AND_UNDERSCORE), KEY(EQUALS_AND_PLUS),
     KEY(GRAVE),             KEY(1),         KEY(2),                     KEY(3),        KEY(4),                    KEY(5),
     KEY(TAB),               KEY(Q),         KEY(W),                     KEY(E),        KEY(R),                    KEY(T),
     TAPH(ESCAPE, LEFTCTRL), KEY(A),         KEY(S),                     KEY(D),        KEY(F),                    KEY(G),
@@ -151,7 +152,7 @@ const action_t keymap[2][84] = {
     ___,                    KEY(PAGE_DOWN), KANDMOD(INSERT, LEFTSHIFT), KEY(DELETE),   KEY(DELETE_FORWARD),       ___,
 
     // RIGHT
-    KEY(BRACKET_LEFT), KEY(BRACKET_RIGHT), ___,                      ___,        ___,       ___,
+    KEY(BRACKET_LEFT), KEY(BRACKET_RIGHT), KEY(SCROLL_LOCK),         KEY(PRINTSCREEN),        ___,       ___,
     KEY(6),            KEY(7),             KEY(8),                   KEY(9),     KEY(0),    ___,
     KEY(Y),            KEY(U),             KEY(I),                   KEY(O),     KEY(P),    KEY(BACKSLASH_AND_PIPE),
     KEY(H),            KEY(J),             KEY(K),                   KEY(L),     KEY(SEMICOLON_AND_COLON),  KEY(APOSTROPHE),
@@ -164,8 +165,8 @@ const action_t keymap[2][84] = {
   // Layer 1
   KEYMAP(
     // LEFT
-    ___,         ___,       ___,          ___,         ___,          ___,
-    ___,         KEY(F1),     KEY(F2),   KEY(F3),      KEY(F4),     KEY(F5),
+    ___,         ___,       KEY(F14),  KEY(F15),         ___,          ___,
+    ___,         KEY(F1),   KEY(F2),   KEY(F3),      KEY(F4),     KEY(F5),
     ___,         ___,       ___,          ___,         ___,          ___,
     ___,         ___,       ___,          ___,         ___,          ___,
     ___,         ___,       ___,          ___,         ___,          ___,
@@ -177,9 +178,9 @@ const action_t keymap[2][84] = {
     KEY(F6),   KEY(F7),     KEY(F8),     KEY(F9),   KEY(F10),     ___,
     ___,         ___,       ___,          ___,         ___,       ___,
     ___,         ___,       ___,          ___,         ___,       ___,
-    ___,         ___,       ___,          ___,         ___,       ___,
-    ___,         ___,       ___,          ___,         ___,       ___,
-    ___,         ___,       ___,          ___,         ___,       ___
+    ___,         ___,       CONS(SCAN_PREVIOUS_TRACK), CONS(SCAN_PREVIOUS_TRACK), CONS(PLAY),       ___,
+    ___,         ___,       ___,          ___,         KEY(VOLUME_UP),   ___,
+    ___,         ___,       ___,          KEY(HOME),         KEY(VOLUME_DOWN), KEY(END)
   )
 };
 
@@ -281,10 +282,8 @@ void applyMatrix() {
       if (state.scanCode != 0xff && state.down) {
         switch (state.action & kMask) {
           case kTapHold:
-            if (now - state.lastChange > kTapInterval) {
-              // Holding
-              mods |= (state.action >> 16) & 0xff;
-            }
+            // Holding
+            mods |= (state.action >> 16) & 0xff;
             break;
           case kKeyAndMod:
             {
@@ -318,7 +317,8 @@ void applyMatrix() {
         switch (state.action & kMask) {
           case kTapHold:
             if (state.lastChange == now && state.lastChange - state.priorChange <= kTapInterval) {
-              // Tapped and just released
+              // Tapped and just released.  FIXME: suppress this if we generated a
+              // report with the hold portion of this together with another key?
               auto key = state.action & 0xff;
               if (key != 0 && repsize < 6) {
                 report.keys[repsize++] = key;
