@@ -143,22 +143,22 @@ const action_t keymap[2][84] = {
   // Layer 0
   KEYMAP(
     // LEFT
-    KEY(ESCAPE),            KEY(PAUSE),     KEY(SCROLL_LOCK),           ___,           KEY(MINUS_AND_UNDERSCORE), KEY(EQUALS_AND_PLUS),
+    KEY(ESCAPE),            ___,            KEY(VOLUME_DOWN),           KEY(VOLUME_UP),KEY(MINUS_AND_UNDERSCORE), KEY(EQUALS_AND_PLUS),
     KEY(GRAVE),             KEY(1),         KEY(2),                     KEY(3),        KEY(4),                    KEY(5),
     KEY(TAB),               KEY(Q),         KEY(W),                     KEY(E),        KEY(R),                    KEY(T),
     TAPH(ESCAPE, LEFTCTRL), KEY(A),         KEY(S),                     KEY(D),        KEY(F),                    KEY(G),
     MOD(LEFTSHIFT),         KEY(Z),         KEY(X),                     KEY(C),        KEY(V),                    KEY(B),
     ___,                    KEY(PAGE_UP),   KANDMOD(C, LEFTCTRL),       MOD(LEFTCTRL), MOD(LEFTALT),              MOD(LEFTGUI),
-    ___,                    KEY(PAGE_DOWN), KANDMOD(INSERT, LEFTSHIFT), KEY(DELETE),   KEY(DELETE_FORWARD),       ___,
+    ___,                    KEY(PAGE_DOWN), KANDMOD(INSERT, LEFTSHIFT), MOD(LEFTSHIFT),LAYER(1),                  KEY(DELETE),
 
     // RIGHT
-    KEY(BRACKET_LEFT), KEY(BRACKET_RIGHT), KEY(SCROLL_LOCK),         KEY(PRINTSCREEN),        ___,       ___,
+    KEY(BRACKET_LEFT), KEY(BRACKET_RIGHT), KEY(MUTE),                KEY(PRINTSCREEN),        ___,       ___,
     KEY(6),            KEY(7),             KEY(8),                   KEY(9),     KEY(0),    ___,
     KEY(Y),            KEY(U),             KEY(I),                   KEY(O),     KEY(P),    KEY(BACKSLASH_AND_PIPE),
     KEY(H),            KEY(J),             KEY(K),                   KEY(L),     KEY(SEMICOLON_AND_COLON),  KEY(APOSTROPHE),
     KEY(N),            KEY(M),             KEY(COMMA_AND_LESS_THAN), KEY(PERIOD_AND_GREATER_THAN), KEY(SLASH_AND_QUESTION_MARK), MOD(RIGHTSHIFT),
     MOD(RIGHTGUI),     MOD(RIGHTALT),      MOD(RIGHTCTRL),           ___,             KEY(UP_ARROW),   LAYER(1),
-    ___,               KEY(ENTER),         KEY(SPACEBAR),            KEY(LEFT_ARROW), KEY(DOWN_ARROW), KEY(RIGHT_ARROW)
+    KEY(ENTER),        KEY(SPACEBAR),      MOD(RIGHTSHIFT),          KEY(LEFT_ARROW), KEY(DOWN_ARROW), KEY(RIGHT_ARROW)
 
 
   ),
@@ -179,8 +179,8 @@ const action_t keymap[2][84] = {
     ___,         ___,       ___,          ___,         ___,       ___,
     ___,         ___,       ___,          ___,         ___,       ___,
     ___,         ___,       CONS(SCAN_PREVIOUS_TRACK), CONS(SCAN_PREVIOUS_TRACK), CONS(PLAY),       ___,
-    ___,         ___,       ___,          ___,         KEY(VOLUME_UP),   ___,
-    ___,         ___,       ___,          KEY(HOME),         KEY(VOLUME_DOWN), KEY(END)
+    ___,         ___,       ___,          ___,         KEY(PAGE_UP),   ___,
+    ___,         ___,       ___,          KEY(HOME),   KEY(PAGE_DOWN), KEY(END)
   )
 };
 
